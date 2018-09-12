@@ -79,29 +79,7 @@ export default {
   head: {
     title: {
       inner: 'Insects of Korea'
-    },
-    meta: [
-      {
-        property: 'og:description',
-        content: '한국의 곤충들'
-      },
-      {
-        property: 'og:type',
-        content: 'website'
-      },
-      {
-        property: 'og:title',
-        content: '한국 곤충 종 목록'
-      },
-      {
-        property: 'og:url',
-        content: 'https://favonius.github.io'
-      },
-      {
-        property: 'og:image',
-        content: 'https://favonius.github.io/metaimage.jpg'
-      }
-    ]
+    }
   }
 }
 </script>

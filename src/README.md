@@ -1,4 +1,4 @@
-# insectsofkorea
+# Insects of Korea
 
 > Insects of Korea
 

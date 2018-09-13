@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="content">
     <p class="headerObject" v-show=!isLoggedIn v-on:click="showLogin = true">
       <u>Login</u>
     </p>
@@ -9,7 +9,7 @@
     <p class="headerObject" v-on:click="aboutVisible = true">
       <u>About</u>
     </p>
-    <el-dialog title="Login" :visible.sync="showLogin">
+    <el-dialog width=90% title="Login" :visible.sync="showLogin">
       <el-form :model="form">
         <el-form-item label="E-Mail" :label-width="formLabelWidth">
           <el-input v-model="form.email" auto-complete="off"></el-input>
@@ -45,7 +45,7 @@ export default {
         email: '',
         password: ''
       },
-      formLabelWidth: '120px',
+      formLabelWidth: '80px',
       showLogin: false,
       aboutVisible: false
     }
@@ -85,5 +85,6 @@ export default {
   padding-bottom: 0px;
   margin: 0px;
   float: right;
+  color: gray;
 }
 </style>

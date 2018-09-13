@@ -10,7 +10,6 @@ export function insectData () {
 }
 
 function initList () {
-  console.log('do Process')
   list = []
   var data = jsonMap.data
   for (var orderKey in data) {

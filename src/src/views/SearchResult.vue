@@ -49,6 +49,9 @@ export default {
     }
   },
   directives: { infiniteScroll },
+  created () {
+    this.getResultData()
+  },
   data () {
     return {
       dialogAddPhotoVisible: false,

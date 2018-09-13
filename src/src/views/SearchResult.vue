@@ -1,8 +1,8 @@
 <template>
   <div ref="searchResult">
-    <el-row :gutter="5" v-for="(rowItem,rowIndex) in rowResult" v-bind:key="rowIndex">
-      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" v-for="(insect,colIndex) in rowItem" v-bind:key="colIndex">
-        <el-card class="box-card">
+    <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+      <div class="grid">
+        <el-card class="box-card" v-for="(insect,colIndex) in resultData" v-bind:key="colIndex">
           <img v-if="imageMap[getID(insect)] != undefined" v-bind:src=imageMap[getID(insect)].url style="width:100%" v-on:click="openPopup(imageMap[getID(insect)].sourceUrl)" >
           <p v-on:click="copyToClipboard">{{insect.skn}}{{insect.sskn}}</p>
           <p v-on:click="copyToClipboard">
@@ -12,8 +12,9 @@
             <button style="float: right;" icon="el-icon-search" v-show=isLoggedIn v-on:click="showAddPhotoDialog(insect)">Set Photo</button>
           </p>
         </el-card>
-      </el-col>
-    </el-row>
+      </div>
+      <div v-show="busy" v-loading="busy" style="height:100px" >  </div>
+    </div>
     <el-dialog title="Add Photo" :visible.sync="dialogAddPhotoVisible">
       <el-form :model="form">
         <el-form-item label="Insect Name" :label-width="formLabelWidth">
@@ -38,6 +39,7 @@
 </template>
 <script>
 import { getfullSpeciesName, getAuthorYear, getTags, getID, setPhoto, getPhoto } from '@/api/insect'
+import infiniteScroll from 'vue-infinite-scroll'
 
 export default {
   name: 'SearchResult',
@@ -46,6 +48,7 @@ export default {
       type: Array
     }
   },
+  directives: { infiniteScroll },
   data () {
     return {
       dialogAddPhotoVisible: false,
@@ -56,30 +59,14 @@ export default {
         sourceUrl: ''
       },
       formLabelWidth: '120px',
-      imageMap: {}
+      imageMap: {},
+      resultData: [],
+      pageCount: 0,
+      pageSize: 30,
+      busy: false
     }
   },
   computed: {
-    rowResult: function () {
-      var totalResult = []
-      var rowResult = []
-      var vm = this
-      if (this.insectData != null) {
-        const count = this.getCountPerRow()
-        for (var i = 0, len = this.insectData.length; i < len; i++) {
-          rowResult.push(this.insectData[i])
-          getPhoto(this.insectData[i], function (id, data) {
-            vm.$set(vm.imageMap, id, data)
-          })
-          if (i % count === count - 1) {
-            totalResult.push(rowResult)
-            rowResult = []
-          }
-        }
-        totalResult.push(rowResult)
-      }
-      return totalResult
-    },
     isLoggedIn: function () {
       return this.$store.state.isLoggedIn
     }
@@ -134,6 +121,35 @@ export default {
     },
     openPopup (url) {
       window.open(url, '_blank')
+    },
+    getResultData () {
+      if (this.insectData !== null) {
+        var vm = this
+        for (var i = this.pageCount * this.pageSize, len = this.insectData.length; i < (this.pageCount + 1) * this.pageSize && i < len; i++) {
+          if (this.insectData[i] !== undefined) {
+            getPhoto(this.insectData[i], function (id, data) {
+              vm.$set(vm.imageMap, id, data)
+            })
+            this.$set(this.resultData, i, this.insectData[i])
+          }
+        }
+      }
+    },
+    loadMore () {
+      this.busy = true
+
+      setTimeout(() => {
+        this.pageCount += 1
+        this.getResultData()
+        this.busy = false
+      }, 1000)
+    }
+  },
+  watch: {
+    insectData: function (newValue) {
+      this.resultData = []
+      this.pageCount = 0
+      this.getResultData()
     }
   }
 }
@@ -143,4 +159,14 @@ export default {
 .tags {
   font-size: 2px;
 }
+.grid {
+   display: grid;
+   grid-gap: 10px;
+   grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+}
+
+.box-card {
+  width: 100%;
+}
+
 </style>

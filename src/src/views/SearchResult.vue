@@ -3,11 +3,11 @@
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
       <div class="grid">
         <el-card class="box-card" v-for="(insect,colIndex) in resultData" v-bind:key="colIndex">
-          <img v-if="imageMap[getID(insect)] != undefined" v-bind:src=imageMap[getID(insect)].url style="width:100%" v-on:click="openPopup(imageMap[getID(insect)].sourceUrl)" >
-          <p v-on:click="copyToClipboard">{{insect.skn}}{{insect.sskn}}</p>
+          <img v-if="imageMap[insect.id] != undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+          <p v-on:click="copyToClipboard">{{insect.ko}}</p>
           <p v-on:click="copyToClipboard">
-            <i>{{getName(insect)}}</i> {{getAuthorYear(insect)}}</p>
-          <p class="tags" v-on:click="copyToClipboard">{{getTags(insect)}}</p>
+            <i>{{insect.en}}</i> {{insect.ay}}</p>
+          <p class="tags" v-on:click="copyToClipboard">{{insect.tags}}</p>
           <p>
             <button style="float: right;" icon="el-icon-search" v-show=isLoggedIn v-on:click="showAddPhotoDialog(insect)">Set Photo</button>
           </p>
@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import { getfullSpeciesName, getAuthorYear, getTags, getID, setPhoto, getPhoto } from '@/api/insect'
+import { setPhoto, getPhoto } from '@/api/insect'
 import infiniteScroll from 'vue-infinite-scroll'
 
 export default {
@@ -72,15 +72,6 @@ export default {
     }
   },
   methods: {
-    getName (insect) {
-      return getfullSpeciesName(insect)
-    },
-    getAuthorYear (insect) {
-      return getAuthorYear(insect)
-    },
-    getTags (insect) {
-      return getTags(insect)
-    },
     copyToClipboard: function (event) {
       var t = document.createElement('textarea')
       document.body.appendChild(t)
@@ -88,9 +79,6 @@ export default {
       t.select()
       document.execCommand('copy')
       document.body.removeChild(t)
-    },
-    getID (insect) {
-      return getID(insect)
     },
     getCountPerRow () {
       if (this.$refs.searchResult !== undefined) {
@@ -108,7 +96,7 @@ export default {
     },
     showAddPhotoDialog (insect) {
       this.form.name = insect.skn + insect.sskn
-      this.form.id = getID(insect)
+      this.form.id = insect.id
       this.form.url = ''
       this.form.sourceUrl = ''
       this.dialogAddPhotoVisible = true

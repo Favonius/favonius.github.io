@@ -91,10 +91,6 @@ export default {
 .input-with-select .el-input-group__prepend {
   background-color: #fff;
 }
-.loginButton {
-  padding: 10px;
-  float:right;
-}
 .el-row {
   margin-bottom: 10px;
 }

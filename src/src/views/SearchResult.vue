@@ -40,7 +40,6 @@
 <script>
 import { setPhoto, getPhoto } from '@/api/insect'
 import infiniteScroll from 'vue-infinite-scroll'
-
 export default {
   name: 'SearchResult',
   props: {
@@ -130,7 +129,6 @@ export default {
     },
     loadMore () {
       this.busy = true
-
       setTimeout(() => {
         this.pageCount += 1
         this.getResultData()
@@ -152,14 +150,22 @@ export default {
 .tags {
   font-size: 2px;
 }
-.grid {
-   display: grid;
-   grid-gap: 10px;
-   grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+@media screen and (max-width: 768px) {
+  .grid {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+  }
 }
 
+@media screen and (min-width: 769px) {
+  .grid {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+  }
+}
 .box-card {
   width: 100%;
 }
-
 </style>

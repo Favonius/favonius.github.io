@@ -18,7 +18,7 @@
       <p> {{this.searchAnswer}} </p>
     </el-row>
     <el-row v-show="recentViewShow">
-      <h2> Recent Update </h2>
+      <h2> Recent Updates </h2>
     </el-row>
     <search-result :insect-data=searchResult></search-result>
   </div>

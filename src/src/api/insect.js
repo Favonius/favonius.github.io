@@ -27,15 +27,6 @@ export function FindRecentUpdate () {
     })
   })
   return searchResult
-  // const len = insectData().length
-  // var response = []
-  // for (var i = 0; i < len; i++) {
-  //   const data = insectData()[i]
-  //   if (data.tags.toLowerCase().includes(searchText.toLowerCase())) {
-  //     response.push(data)
-  //   }
-  // }
-  // return response
 }
 
 export function setPhoto (data) {

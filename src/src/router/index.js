@@ -15,7 +15,7 @@ export default new Router({
         icon: 'contestcup'
       },
       children: [
-        {path: '/:searchText', component: () => import('@/views/Main'), name: 'InsectofKorea', meta: { title: 'Insects of Korea' }}
+        {path: '/:searchText', component: () => import('@/views/Main'), name: 'Search', meta: { title: 'Insects of Korea' }}
       ]
     }
   ]

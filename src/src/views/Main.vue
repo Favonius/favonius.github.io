@@ -4,24 +4,27 @@
       <login></login>
     </el-row>
     <el-row>
-      <el-input placeholder="어떤 종을 찾고 싶으세요?" v-model="searchText" class="input-with-select" @keyup.native="isValidQuestion" @keyup.native.enter="getAnswer">
-        <el-select v-model="select" slot="prepend" placeholder="영역">
+      <el-input placeholder="어떤 종을 찾고 싶으세요?" v-model="searchText" class="input-with-select" @keyup.native="isValidQuestion" @keyup.native.enter="enterText">
+        <!-- <el-select v-model="select" slot="prepend" placeholder="영역">
           <el-option label="전체" value="1"></el-option>
           <el-option label="종명" value="2"></el-option>
           <el-option label="속명" value="3"></el-option>
           <el-option label="과명" value="4"></el-option>
-        </el-select>
-        <el-button slot="append" icon="el-icon-search" v-on:click="getAnswer"></el-button>
+        </el-select> -->
+        <el-button slot="append" icon="el-icon-search" v-on:click="enterText"></el-button>
       </el-input>
     </el-row>
     <el-row>
       <p> {{this.searchAnswer}} </p>
     </el-row>
+    <el-row v-show="recentViewShow">
+      <h2> Recent Update </h2>
+    </el-row>
     <search-result :insect-data=searchResult></search-result>
   </div>
 </template>
 <script>
-import { FindFull } from '@/api/insect'
+import { FindFull, FindRecentUpdate } from '@/api/insect'
 import SearchResult from './SearchResult'
 import Login from './Login'
 
@@ -36,6 +39,7 @@ export default {
       searchResult: null,
       searchAnswer: '',
       select: '',
+      recentViewShow: false,
       db: null
     }
   },
@@ -45,9 +49,6 @@ export default {
     this.getAnswer()
   },
   methods: {
-    keymonitor: function (event) {
-      this.isValidQuestion()
-    },
     isValidQuestion: function () {
       if (this.searchText == null) {
         return false
@@ -69,10 +70,34 @@ export default {
         }
       }
     },
+    enterText: function () {
+      if (this.isValidQuestion()) {
+        this.$router.push({name: 'Search', params: {searchText: this.searchText}})
+        this.getAnswer()
+      }
+    },
     getAnswer: function () {
       if (this.isValidQuestion()) {
         this.searchResult = FindFull(this.searchText)
         this.searchAnswer = this.searchResult.length + '건 찾았어요!'
+      }
+    }
+  },
+  watch: {
+    searchText: function (val) {
+      if (val !== undefined) {
+        if (val.length === 0) {
+          this.recentViewShow = true
+        } else {
+          this.recentViewShow = !this.isValidQuestion()
+        }
+      } else {
+        this.recentViewShow = true
+      }
+    },
+    recentViewShow: function (val) {
+      if (val) {
+        this.searchResult = FindRecentUpdate()
       }
     }
   },

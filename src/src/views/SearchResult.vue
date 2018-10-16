@@ -59,7 +59,8 @@ export default {
         name: '',
         id: '',
         url: '',
-        sourceUrl: ''
+        sourceUrl: '',
+        updateDate: ''
       },
       formLabelWidth: '120px',
       imageMap: {},
@@ -106,6 +107,7 @@ export default {
     },
     doAddPhoto () {
       if (this.form.url.length > 1 && this.form.sourceUrl.length > 1) {
+        this.form.updateDate = (new Date()).getTime()
         setPhoto(this.form)
         this.dialogAddPhotoVisible = false
       }

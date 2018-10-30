@@ -97,6 +97,7 @@ export default {
     },
     recentViewShow: function (val) {
       if (val) {
+        console.log(FindRecentUpdate())
         this.searchResult = FindRecentUpdate()
       }
     }

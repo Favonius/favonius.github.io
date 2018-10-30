@@ -1,8 +1,16 @@
 <template>
   <div ref="searchResult">
+    <el-row type="flex" justify="end">
+      <el-col :span="6">
+        <div id="mybutton" v-if="hasImage">
+          <el-button type="primary" icon="el-icon-document" circle v-if="onlyphoto" v-on:click="onlyphoto=!onlyphoto"></el-button>
+          <el-button type="success" icon="el-icon-picture" circle v-if="!onlyphoto" v-on:click="onlyphoto=!onlyphoto"></el-button>
+        </div>
+      </el-col>
+    </el-row>
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
       <div class="grid">
-        <el-card class="box-card" v-for="(insect,colIndex) in resultData" v-bind:key="colIndex">
+        <el-card class="box-card" v-for="(insect,colIndex) in resultData" v-bind:key="colIndex" v-if="isShowCard(insect)">
           <img v-if="imageMap[insect.id] != undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
           <p v-on:click="copyToClipboard">{{insect.ko}}</p>
           <p v-on:click="copyToClipboard">
@@ -66,12 +74,21 @@ export default {
       resultData: [],
       pageCount: 0,
       pageSize: 30,
-      busy: false
+      busy: false,
+      onlyphoto: false
     }
   },
   computed: {
     isLoggedIn: function () {
       return this.$store.state.isLoggedIn
+    },
+    hasImage: function () {
+      for (var i = 0, len = this.resultData.length; i < len; i++) {
+        if (this.imageMap[this.resultData[i].id] !== undefined) {
+          return true
+        }
+      }
+      return false
     }
   },
   methods: {
@@ -95,6 +112,17 @@ export default {
         } else {
           return 2
         }
+      }
+    },
+    isShowCard (insect) {
+      if (this.onlyphoto) {
+        if (this.imageMap[insect.id] !== undefined) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return true
       }
     },
     showAddPhotoDialog (insect) {
@@ -167,5 +195,10 @@ export default {
 }
 .box-card {
   width: 100%;
+}
+#mybutton {
+  position: fixed;
+  bottom: 10px;
+  right: 15px;
 }
 </style>

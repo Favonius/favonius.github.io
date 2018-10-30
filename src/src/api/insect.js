@@ -15,7 +15,7 @@ export function FindFull (searchText) {
 
 export function FindRecentUpdate () {
   var searchResult = []
-  firebase.firestore().collection('insect').orderBy('updateDate', 'desc').limit(10).get().then(function (querySnapshot) {
+  firebase.firestore().collection('insect').orderBy('updateDate', 'desc').limit(30).get().then(function (querySnapshot) {
     querySnapshot.forEach(function (doc) {
       const len = insectData().length
       for (var i = 0; i < len; i++) {

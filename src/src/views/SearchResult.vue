@@ -168,6 +168,7 @@ export default {
     insectData: function (newValue) {
       this.resultData = []
       this.pageCount = 0
+      this.onlyphoto = false
       this.getResultData()
     }
   }

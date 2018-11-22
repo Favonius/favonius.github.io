@@ -11,11 +11,24 @@
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
       <div class="grid">
         <el-card class="box-card" v-for="(insect,colIndex) in resultData" v-bind:key="colIndex" v-if="isShowCard(insect)">
-          <img v-if="imageMap[insect.id] != undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
-          <p v-on:click="copyToClipboard">{{insect.ko}}</p>
+
+          <div class="flip-container" ontouchstart="this.classList.toggle('hover');" v-if="imageMap[insect.id] != undefined">
+            <div class="flipper">
+              <div class="front">
+                    <img v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+              </div>
+              <div class="back" >
+                <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+                <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+
+              </div>
+            </div>
+          </div>
+
+          <p v-on:click="copyToClipboard"><b>{{insect.ko}}</b></p>
           <p v-on:click="copyToClipboard">
-            <i>{{insect.en}}</i> {{insect.ay}}</p>
-          <p class="tags" v-on:click="copyToClipboard">{{insect.tags}}</p>
+            <b><i>{{insect.en}}</i> {{insect.ay}}</b></p>
+          <p class="tags" v-show=isLoggedIn v-on:click="copyToClipboard">{{insect.tags}}</p>
           <p>
             <button style="float: right;" icon="el-icon-search" v-show=isLoggedIn v-on:click="showAddPhotoDialog(insect)">Set Photo</button>
           </p>
@@ -33,6 +46,15 @@
         </el-form-item>
         <el-form-item label="Image URL" :label-width="formLabelWidth">
           <el-input v-model="form.url" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="Image1 Back URL" :label-width="formLabelWidth">
+          <el-input v-model="form.url_back" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="Image2 URL" :label-width="formLabelWidth">
+          <el-input v-model="form.url2" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="Image2 Back URL" :label-width="formLabelWidth">
+          <el-input v-model="form.url2_back" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="Source URL" :label-width="formLabelWidth">
           <el-input v-model="form.sourceUrl" auto-complete="off"></el-input>
@@ -66,6 +88,9 @@ export default {
         name: '',
         id: '',
         url: '',
+        url_back: '',
+        url2: '',
+        url_back2: '',
         sourceUrl: '',
         updateDate: ''
       },
@@ -128,13 +153,22 @@ export default {
     showAddPhotoDialog (insect) {
       this.form.name = insect.skn + insect.sskn
       this.form.id = insect.id
-      this.form.url = ''
-      this.form.sourceUrl = ''
+      this.form.url = this.imageMap[insect.id].url
+      this.form.url_back = this.imageMap[insect.id].url_back
+      this.form.url2 = this.imageMap[insect.id].url2
+      this.form.url2_back = this.imageMap[insect.id].url2_back
+      this.form.sourceUrl = this.imageMap[insect.id].sourceUrl
       this.dialogAddPhotoVisible = true
     },
     doAddPhoto () {
       if (this.form.url.length > 1 && this.form.sourceUrl.length > 1) {
         this.form.updateDate = (new Date()).getTime()
+        if (this.form.url2 === undefined) {
+          this.form.url2 = ' '
+        }
+        if (this.form.url2_back === undefined) {
+          this.form.url2_back = ' '
+        }
         setPhoto(this.form)
         this.dialogAddPhotoVisible = false
       }
@@ -201,5 +235,44 @@ export default {
   position: fixed;
   bottom: 10px;
   right: 15px;
+}
+
+.flip-container {
+  perspective: 1000px;
+}
+/* flip the pane when hovered */
+.flip-container:hover .flipper, .flip-container.hover .flipper {
+  transform: rotateY(180deg);
+}
+
+.flip-container, .front, .back {
+ width: 100%;
+  height: 480px;
+}
+
+/* flip speed goes here */
+.flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.front, .back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+z-index: 2;
+/* for firefox 31 */
+transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+  transform: rotateY(180deg);
 }
 </style>

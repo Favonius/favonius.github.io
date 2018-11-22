@@ -27,7 +27,7 @@ function initList () {
           if (speciesKo.length < 1) {
             speciesKo = '국명없음'
           }
-          var tags = orderKey + ',' + orderKo + ',' + familyKey + ',' + familyKo + ',' + genusKey + ',' + genusKo + ',' + speciesKey + ',' + speciesKo + ',' + speciesAy
+          var tags = orderKey + ',' + orderKo + ',' + familyKey + ',' + familyKo + ',' + genusKey + ',' + genusKo + ',' + speciesKey + ',' + speciesKo
           var speciesEn = genusKey + ' ' + speciesKey
           var id = genusKey + speciesKey
           id = id.replace(/\s/g, '')

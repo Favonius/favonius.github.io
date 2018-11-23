@@ -6,11 +6,14 @@ import router from './router'
 import store from './store'
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
+import Vue2TouchEvents from 'vue2-touch-events'
+import VueFlip from 'vue-flip'
 import firebase from 'firebase'
 
 Vue.config.productionTip = false
 Vue.use(Element)
+Vue.use(Vue2TouchEvents)
+Vue.use(VueFlip)
 
 /* firebase initialize */
 var config = {

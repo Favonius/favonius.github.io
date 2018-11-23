@@ -11,20 +11,26 @@
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
       <div class="grid">
         <el-card class="box-card" v-for="(insect,colIndex) in resultData" v-bind:key="colIndex" v-if="isShowCard(insect)">
-
-          <div class="flip-container" ontouchstart="this.classList.toggle('hover');" v-if="imageMap[insect.id] != undefined">
-            <div class="flipper">
+          <vue-flip active-hover="true" v-if="!isMobile()">
+            <div slot="front" v-if="imageMap[insect.id] != undefined">
+              <img v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+            </div>
+            <div slot="back" v-if="imageMap[insect.id] != undefined">
+              <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+              <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+            </div>
+          </vue-flip>
+          <div v-touch:swipe="swipeHandler" class="flip-container" v-if="isMobile()">
+            <div class="flipper" v-if="imageMap[insect.id] != undefined">
               <div class="front">
                     <img v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
               </div>
               <div class="back" >
                 <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
                 <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
-
               </div>
             </div>
           </div>
-
           <p v-on:click="copyToClipboard"><b>{{insect.ko}}</b></p>
           <p v-on:click="copyToClipboard">
             <b><i>{{insect.en}}</i> {{insect.ay}}</b></p>
@@ -69,7 +75,10 @@
 </template>
 <script>
 import { setPhoto, getPhoto } from '@/api/insect'
+import { isMobile } from '@/util/util'
 import infiniteScroll from 'vue-infinite-scroll'
+import VueFlip from 'vue-flip'
+
 export default {
   name: 'SearchResult',
   props: {
@@ -80,6 +89,9 @@ export default {
   directives: { infiniteScroll },
   created () {
     this.getResultData()
+  },
+  components: {
+    'vue-flip': VueFlip
   },
   data () {
     return {
@@ -117,6 +129,12 @@ export default {
     }
   },
   methods: {
+    swipeHandler: function (direction, event) {
+      event.path[3].classList.toggle('flip')
+    },
+    isMobile: function () {
+      return isMobile()
+    },
     copyToClipboard: function (event) {
       var t = document.createElement('textarea')
       document.body.appendChild(t)
@@ -219,6 +237,10 @@ export default {
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
   }
+  .flip-container, .front, .back {
+    width: 100%;
+    height: 240px;
+  }
 }
 
 @media screen and (min-width: 769px) {
@@ -226,6 +248,10 @@ export default {
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+  }
+  .flip-container, .front, .back {
+    width: 100%;
+    height: 480px;
   }
 }
 .box-card {
@@ -235,19 +261,15 @@ export default {
   position: fixed;
   bottom: 10px;
   right: 15px;
+  z-index: 9999;
 }
 
 .flip-container {
   perspective: 1000px;
 }
 /* flip the pane when hovered */
-.flip-container:hover .flipper, .flip-container.hover .flipper {
+.flip-container.hover .flipper, .flip-container.flip .flipper {
   transform: rotateY(180deg);
-}
-
-.flip-container, .front, .back {
- width: 100%;
-  height: 480px;
 }
 
 /* flip speed goes here */

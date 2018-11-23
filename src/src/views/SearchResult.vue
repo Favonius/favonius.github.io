@@ -130,7 +130,13 @@ export default {
   },
   methods: {
     swipeHandler: function (direction, event) {
-      event.path[3].classList.toggle('flip')
+      console.log(event)
+      for (var i = 0, len = event.path.length; i < len; i++) {
+        if (event.path[i].className.includes('flip-container')) {
+          event.path[i].classList.toggle('flip')
+          break
+        }
+      }
     },
     isMobile: function () {
       return isMobile()

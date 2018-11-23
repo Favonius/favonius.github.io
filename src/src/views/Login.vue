@@ -27,6 +27,7 @@
       <p>한국 곤충 총 목록 입니다..</p>
       <p> 적적해서 만들어 보았습니다..</p>
       <p>사진 링크 노가다꾼 구합니다.</p>
+      <p>0.0.1</p>
       <a href="mailto:peoplece@gmail.com"><i class="el-icon-message"></i></a>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" plain @click="aboutVisible = false">확인</el-button>

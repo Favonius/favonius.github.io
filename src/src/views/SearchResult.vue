@@ -187,11 +187,19 @@ export default {
     showAddPhotoDialog (insect) {
       this.form.name = insect.skn + insect.sskn
       this.form.id = insect.id
-      this.form.url = this.imageMap[insect.id].url
-      this.form.url_back = this.imageMap[insect.id].url_back
-      this.form.url2 = this.imageMap[insect.id].url2
-      this.form.url2_back = this.imageMap[insect.id].url2_back
-      this.form.sourceUrl = this.imageMap[insect.id].sourceUrl
+      if (this.imageMap[insect.id] !== undefined) {
+        this.form.url = this.imageMap[insect.id].url
+        this.form.url_back = this.imageMap[insect.id].url_back
+        this.form.url2 = this.imageMap[insect.id].url2
+        this.form.url2_back = this.imageMap[insect.id].url2_back
+        this.form.sourceUrl = this.imageMap[insect.id].sourceUrl
+      } else {
+        this.form.url = ''
+        this.form.url_back = ''
+        this.form.url2 = ''
+        this.form.url2_back = ''
+        this.form.sourceUrl = ''
+      }
       this.dialogAddPhotoVisible = true
     },
     doAddPhoto () {

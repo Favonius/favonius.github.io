@@ -11,7 +11,7 @@
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
       <div class="grid">
         <el-card class="box-card" v-for="(insect,colIndex) in resultData" v-bind:key="colIndex" v-if="isShowCard(insect)">
-          <vue-flip active-hover="true" v-if="!isMobile()">
+          <vue-flip :active-hover=true width=100% transition=1s v-if="!isMobile()">
             <div slot="front" v-if="imageMap[insect.id] != undefined">
               <img v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
             </div>
@@ -20,7 +20,16 @@
               <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
             </div>
           </vue-flip>
-          <div v-touch:swipe="swipeHandler" class="flip-container" v-if="isMobile()">
+          <vue-flip :active-click=true width=100% transition=1s v-if="isMobile()">
+            <div slot="front" v-if="imageMap[insect.id] != undefined">
+              <img v-bind:src=imageMap[insect.id].url style="width:100%" >
+            </div>
+            <div slot="back" v-if="imageMap[insect.id] != undefined">
+              <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back style="width:100%" >
+              <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%">
+            </div>
+          </vue-flip>
+          <!-- <div v-touch:swipe="swipeHandler" class="flip-container" v-if="isMobile()">
             <div class="flipper" v-if="imageMap[insect.id] != undefined">
               <div class="front">
                     <img v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
@@ -30,8 +39,9 @@
                 <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
               </div>
             </div>
-          </div>
-          <p v-on:click="copyToClipboard"><b>{{insect.ko}}</b></p>
+          </div> -->
+          <p v-on:click="copyToClipboard" v-if="!isMobile()"><b>{{insect.ko}}</b></p>
+          <p v-on:click="openPopup(imageMap[insect.id].sourceUrl)" v-if="isMobile()"><b>{{insect.ko}}</b></p>
           <p v-on:click="copyToClipboard">
             <b><i>{{insect.en}}</i> {{insect.ay}}</b></p>
           <p class="tags" v-show=isLoggedIn v-on:click="copyToClipboard">{{insect.tags}}</p>

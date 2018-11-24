@@ -13,33 +13,22 @@
         <el-card class="box-card" v-for="(insect,colIndex) in resultData" v-bind:key="colIndex" v-if="isShowCard(insect)">
           <vue-flip :active-hover=true width=100% transition=1s v-if="!isMobile()">
             <div slot="front" v-if="imageMap[insect.id] != undefined">
-              <img v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+              <img v-bind:src=imageMap[insect.id].url  v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
             </div>
             <div slot="back" v-if="imageMap[insect.id] != undefined">
-              <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
-              <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+              <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back  v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
+              <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
             </div>
           </vue-flip>
           <vue-flip :active-click=true width=100% transition=1s v-if="isMobile()">
             <div slot="front" v-if="imageMap[insect.id] != undefined">
-              <img v-bind:src=imageMap[insect.id].url style="width:100%" >
+              <img v-bind:src=imageMap[insect.id].url  >
             </div>
             <div slot="back" v-if="imageMap[insect.id] != undefined">
-              <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back style="width:100%" >
-              <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%">
+              <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back >
+              <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url >
             </div>
           </vue-flip>
-          <!-- <div v-touch:swipe="swipeHandler" class="flip-container" v-if="isMobile()">
-            <div class="flipper" v-if="imageMap[insect.id] != undefined">
-              <div class="front">
-                    <img v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
-              </div>
-              <div class="back" >
-                <img v-if="imageMap[insect.id].url_back !== undefined" v-bind:src=imageMap[insect.id].url_back style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
-                <img v-if="imageMap[insect.id].url_back === undefined" v-bind:src=imageMap[insect.id].url style="width:100%" v-on:click="openPopup(imageMap[insect.id].sourceUrl)" >
-              </div>
-            </div>
-          </div> -->
           <p v-on:click="copyToClipboard" v-if="!isMobile()"><b>{{insect.ko}}</b></p>
           <p v-on:click="openPopup(imageMap[insect.id].sourceUrl)" v-if="isMobile()"><b>{{insect.ko}}</b></p>
           <p v-on:click="copyToClipboard">
@@ -260,10 +249,15 @@ export default {
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+    grid-auto-rows: minmax(100px, auto);
   }
   .flip-container, .front, .back {
     width: 100%;
-    height: 240px;
+    height: 220px;
+  }
+   .front > div > img, .back > div > img {
+    max-width: 100%;
+    max-height: 210px;
   }
 }
 
@@ -272,10 +266,15 @@ export default {
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+    grid-auto-rows: minmax(100px, auto);
   }
   .flip-container, .front, .back {
     width: 100%;
-    height: 480px;
+    height: 430px;
+  }
+  .front > div > img, .back > div > img {
+    max-width: 100%;
+    max-height: 400px;
   }
 }
 .box-card {
@@ -289,7 +288,7 @@ export default {
 }
 
 .flip-container {
-  perspective: 1000px;
+  perspective: 500px;
 }
 /* flip the pane when hovered */
 .flip-container.hover .flipper, .flip-container.flip .flipper {

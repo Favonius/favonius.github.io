@@ -9,11 +9,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Vue2TouchEvents from 'vue2-touch-events'
 import VueFlip from 'vue-flip'
 import firebase from 'firebase'
+import VueAnalytics from 'vue-analytics'
 
 Vue.config.productionTip = false
 Vue.use(Element)
 Vue.use(Vue2TouchEvents)
 Vue.use(VueFlip)
+
+Vue.use(VueAnalytics, {
+  id: 'UA-127575116-1'
+})
 
 /* firebase initialize */
 var config = {

@@ -16,8 +16,15 @@ Vue.use(Element)
 Vue.use(Vue2TouchEvents)
 Vue.use(VueFlip)
 
+const isProd = process.env.NODE_ENV === 'production'
+
 Vue.use(VueAnalytics, {
-  id: 'UA-127575116-1'
+  id: 'UA-127575116-1',
+  router,
+  debug: {
+    enabled: !isProd,
+    sendHitTask: isProd
+  }
 })
 
 /* firebase initialize */
